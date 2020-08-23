@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- bean实例创建的顺序？ -->
+	<!-- 默认按照配置的顺序来创建bean -->
+	<!-- 
+	<bean id="car" class="com.zhongbin.bean.Car"></bean>
+	<bean id="user" class="com.zhongbin.bean.User"></bean>
+	 -->
+	<!-- bean之间的依赖（只是改变bean的创建顺序） -->
+	<bean id="car" class="com.zhongbin.bean.Car" depends-on="user"></bean>
+	<bean id="user" class="com.zhongbin.bean.User"></bean>
+	
+	<!-- bean的作用域scope：单实例和多实例bean，默认单实例 
+	prototype多实例
+		1.容器启动默认不会去创建多实例bean，获取的时候创建bean
+		2.每次获取都会创建一个新的实例
+	singleton单实例
+		1.在容器启动完成就已经创建好对象放在容器中
+		2.任何时候获取都是获取创建好的同一个bean
+	request在web环境下，同一次请求创建一个bean实例（一般不用）
+	session在web环境下，同义词会话创建一个bean实例（一般不用）
+	-->
+	<bean id="car01" class="com.zhongbin.bean.Car" scope="request"></bean>
+	
+	<!-- 通过静态工厂创建bean -->
+	<!-- bean的创建默认是框架通过反射new出来的bean实例 -->
+	<!-- 工厂模式：一个专门为我们创建对象的类 
+		静态工厂：工厂不用创建对象。
+		实例工厂：工厂要实例化才能为我们创建对象-->
+	<!-- 静态工厂 
+		class:静态工厂的全类名
+		factory-method：指定工厂方法
+		constructor-arg：为工厂传参-->
+	<bean id="user01" class="com.zhongbin.factory.UserStaticFactory"
+		factory-method="getUser">
+		<!-- 为方法指定参数 -->
+		<constructor-arg name="name" value="xiaowu"></constructor-arg>	
+	</bean>
+	<!-- 实例工厂 
+		1.配置工厂实例
+		2.在要创建的bean中配置工厂和工厂方法-->
+	<bean id="userInstanceFactory" class="com.zhongbin.factory.UserInstanceFactory"></bean>
+	<bean id="user02" class="com.zhongbin.bean.User"
+		factory-bean="userInstanceFactory" factory-method="getUser">
+		<constructor-arg name="name" value="tangsan"></constructor-arg>
+	</bean>
+	
+	<!-- FactoryBean:Spring提供的一个接口，实现该接口的类Spring认为它是一个工厂类 -->
+	<!-- 获取对象的时候才会创建对象 -->
+	<bean id="myFactoryBeanImpl"
+		 class="com.zhongbin.factory.MyFactoryBeanImpl"></bean>
+</beans>

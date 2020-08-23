@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- bean标签注册组件
+		class:写注册组件的全类名
+	 -->
+	<bean id="Person01" class="com.zhongbin.bean.Person">
+		<!-- 利用无参构造器创建对象，getter/setter方法进行赋值 -->
+		<property name="name" value="zhangsan"></property>
+		<property name="email" value="zhangsan@qq.com"></property>
+		<property name="sex" value="男"></property>
+	</bean>
+	<bean id="Person02" class="com.zhongbin.bean.Person">
+		<property name="name" value="lisi"></property>
+		<property name="email" value="lisi@qq.com"></property>
+		<property name="sex" value="男"></property>
+	</bean>
+	<bean id="Person03" class="com.zhongbin.bean.Person">
+		<!-- 调用有参构造器进行对象的创建并赋值 有几个<constructor-arg>标签就调用几个参数的构造器,（常用）-->
+		<!-- public Person(String name, String sex, String email) -->
+		<constructor-arg name="sex" value="女"></constructor-arg>
+		<constructor-arg name="name" value="wangwu"></constructor-arg>
+		<constructor-arg name="email" value="wangwu.qq.com"></constructor-arg>
+	</bean>
+	<bean id="Person04" class="com.zhongbin.bean.Person">
+		<!-- public Person(String name, String sex, String email) -->
+		<!-- 省略name属性则必须按照构造器的位置顺序来写（或者用index属性来指定位置，从0开始） -->
+		<constructor-arg value="女"></constructor-arg>
+		<constructor-arg value="wangwu"></constructor-arg>
+		<constructor-arg value="wangwu.qq.com"></constructor-arg>
+	</bean>
+	<!-- <bean id="Person05" class="com.zhongbin.bean.Person">
+		public Person(String name, String sex)
+		public Person(String name, String email)
+		当有多个参数个数相同的构造器时可以用type属性指定参数的类型
+		<constructor-arg value="女"></constructor-arg>
+		<constructor-arg value="wangwu"></constructor-arg>
+	</bean> -->
+	
+	<!-- 通过p名称空间为bean赋值 -->
+	<!-- 名称空间：在xml中用来防止标签重复的 -->
+	<!-- 导入名称空间，写p标签 -->
+	<bean id="Person06" class="com.zhongbin.bean.Person"
+		p:name="xiaoming" p:sex="男" p:email="xiaoming@qq.com">
+	</bean>
+	
+	
+</beans>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd">
+
+	<bean id="car01" class="com.zhongbin.bean.Car">
+		<property name="brand" value="BWM"></property>
+		<property name="color" value="blue"></property>
+		<property name="price" value="123123.2"></property>
+	</bean>
+		
+	<bean id="user01" class="com.zhongbin.bean.User">
+		<!-- 若要把某个属性赋值为null，则需要使用<null/>标签 -->
+		<property name="name">
+		<!-- 进行复杂赋值在property标签体里面赋值 -->
+			<null/>
+		</property>
+		<!-- 为user01中的car属性赋值 -->
+		<!-- 方法一 ：引用bean容器中的car
+					相当于car = car01-->
+		<property name="car" ref="car01"></property>
+		<!-- 方法二：引用内部bean（内部bean不能被外部拿到） -->
+		<!-- 相当于car = new Car();
+		<property name="car">
+			<bean class="com.zhongbin.bean.Car">
+				<property name="brand" value="Volkswagen"></property>
+				<property name="color" value="red"></property>
+				<property name="price" value="12313.2"></property>
+			</bean>
+		</property> 
+		-->
+	</bean>
+	
+	<!-- abstract="true":这个bean只能用来被继承，不能获取它的实例 -->
+	<bean id="user02" class="com.zhongbin.bean.User" abstract="true">
+		<!-- 为List类型赋值 -->
+		<property name="cars">
+			<!-- 相当于cars = new ArrayList<Car>(); -->
+			<list>
+				<!-- 在list标签体中为list添加元素 -->
+				<!-- 创建内部bean -->
+				<bean class="com.zhongbin.bean.Car" p:brand="Cadillac" p:color="pink" p:price="3000000"></bean>
+				<!-- 引用外部bean -->
+				<ref bean="car01"/>
+			</list>
+		</property>
+		<!-- 为map属性赋值 -->
+		<property name="maps">
+			<!-- 相当于maps = new LinkedHashMap<>(); -->
+			<map>
+				<!-- 一个entry就是一个键值对 -->
+				<entry key="key01" value="语文"></entry>
+				<entry key="key02" value="哈哈"></entry>
+				<entry key="key03" value-ref="car01"></entry>
+				<entry key="key04">
+					<bean class="com.zhongbin.bean.Car">
+						<property name="brand" value="Maserati"></property>
+						<property name="color" value="black"></property>
+						<property name="price" value="9999999"></property>
+					</bean>
+				</entry>
+				<entry key="key05">
+					<map>
+						
+					</map>
+				</entry>
+			</map>
+		</property>
+		<property name="properties">
+			<!-- 相当于properties = new Properties(); -->
+			<props>
+				<!-- key-value都是字符串，值写在标签体中 -->
+				<prop key="username">root</prop>
+				<prop key="password">123123</prop>
+			</props>
+		</property>
+	</bean>
+
+
+	<!-- util名称空间创建集合类型的bean：方便别人因引用 -->
+	<util:map id="myMap">	<!-- 相当于myMap = new LinkedHashMap<>(); -->
+		<entry key="key01" value="语文"></entry>
+		<entry key="key02" value="哈哈"></entry>
+		<entry key="key03" value-ref="car01"></entry>
+		<entry key="key04">
+			<bean class="com.zhongbin.bean.Car">
+				<property name="brand" value="Maserati"></property>
+				<property name="color" value="black"></property>
+				<property name="price" value="9999999"></property>
+			</bean>
+		</entry>
+		<entry key="key05">
+			<map>
+
+			</map>
+		</entry>
+	</util:map>
+	<bean id="user03" class="com.zhongbin.bean.User">
+		<property name="maps" ref="myMap"></property>
+	</bean>
+	
+	<!-- 级联属性（属性的属性）赋值： -->
+	<bean id="user04" class="com.zhongbin.bean.User">
+		<!-- 为car赋值时改变car的某些属性 (由于引用关系，同时也会修改被引用对象的属性)-->
+		<property name="car" ref="car01"></property>
+		<property name="car.price" value="1000000"></property>
+	</bean>
+	
+	<!-- 通过继承实现bean配置信息的重用 -->
+	<!-- parent：指定当前bean的配置信息继承于哪个 -->
+	<bean id="user05" class="com.zhongbin.bean.User" parent="user02">
+		<!-- 有变化的下面在赋值 -->
+		<property name="name" value="xiaoli"></property>
+	</bean>
+	
+</beans>

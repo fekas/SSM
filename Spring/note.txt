@@ -1,0 +1,7 @@
+给eclipse安装Spring tools插件
+
+IOC (inversion of control)控制反转
+
+DI： dependency injection 依赖注入
+
+tips：注解不能用可能是因为编译器版本太低，在项目属性中调整编译器（compiler）版本。
