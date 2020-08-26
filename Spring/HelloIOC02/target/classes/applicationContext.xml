@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+	<!-- 创建带有生命周期方法的bean 
+		单实例bean：容器启动时创建，容器关闭时销毁。
+		多实例bean：获取时创建,容器关闭时不会调用bean的销毁方法
+		可以为bean定义一些生命周期方法(要求不能带参数)，spring在创建或销毁时调用-->
+	<!-- bean的生命周期
+		单实例：（容器创建）构造器-——->初始化方法-——->（容器关闭）销毁方法
+		多实例：（获取启动）构造器-——->初始化方法
+		
+		有后置处理器：
+			（容器启动）构造器-——->后置处理器before-——->初始化方法-——->后置处理器after-——->初始化完成
+		 -->
+	<bean id="car01" class="com.zhongbin.bean.Car"
+		destroy-method="myDestory" init-method="myInit" scope="singleton">
+		<property name="brand" value="Ferrari"></property>
+		<property name="color" value="red"></property>
+		<property name="price" value="50000000.00"></property>
+	</bean>
+	
+	<!-- bean的后置处理器 ：在bean的初始化前后调用方法-->
+	<bean name="beanPostProcessor" class="com.zhongbin.bean.MyBeanPostProcessor"></bean>
+	<!-- 没有自定义初始化方法时后置处理器也会工作 -->
+	<bean name="user01" class="com.zhongbin.bean.User"></bean>
+	
+	<!-- 引用外部部署文件
+		 依赖context名称空间 -->
+	<!-- 加载外部文件  		classpath:,表示引用类路径下的文件-->
+	<!-- 源码文件夹/普通文件夹 -->
+	<context:property-placeholder location="classpath:dbconfig.properties"/>
+	<!-- 数据库连接池作为单实例最好，可以让spring帮我们创建连接池对象 -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="user" value="${jdbc.username}"></property>
+		<property name="password" value="${jdbc.password}"></property>
+		<property name="jdbcUrl" value="${jdbc.jdbcUrl}"></property>
+		<property name="driverClass" value="${jdbc.driverClass}"></property>
+	</bean>
+	
+	<!-- 基于xml的自动装配（自动赋值）：仅限于自定义类型。
+			当javabean自定义属性是一个对象时，这个对象在容器中可能存在 -->
+	<!-- 自动装配autoware 
+		default/no: 默认不自动装配
+		byName：以属性名作为id找到组件并给它赋值，找不到则装配null
+		constructor：按照构造器进行赋值：
+			1.按照有参构造器参数的类型进行装配，没有直接装配null
+			2.如果找到了多个；参数的名作为id继续匹配，匹配不到装配null
+		byType：以属性的类型在容器中查找组件，如果容器中有多个这种类型的组件，则报错；没找到装配null
+		-->
+	<!-- List<Car> car; 容器可以把容器中的所有car封装list然后赋值给cars -->
+	<bean name="user02" class="com.zhongbin.bean.User" autowire="constructor">
+		<!-- 手动赋值： 
+		<property name="car" ref="car01"></property> -->
+	</bean>
+	
+	<!-- SpEL测试  Spring expression language-->
+	<bean id="user03" class="com.zhongbin.bean.User">
+		<!-- 字面量 ${}; #{} -->
+		<property name="blance" value="#{12*12+12-123/12}"></property>
+		<!-- 引用外部bean的属性 -->
+		<property name="name" value="#{car01.brand}"></property>
+		<!-- 引用外部bean -->
+		<property name="car" value="#{car01}"></property>
+		<!-- 调用静态方法 ：#{T(全类名.静态方法(参数1，参数2，...))}-->
+		<property name="email" value="#{T(java.util.UUID).randomUUID().toString().substring(0,7)}@qq.com"></property>
+		<!-- 调用非静态方法 -->
+		<property name="sex" value="#{user01.getSex()}"></property>
+	</bean>
+</beans>

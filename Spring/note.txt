@@ -5,3 +5,8 @@ IOC (inversion of control)控制反转
 DI： dependency injection 依赖注入
 
 tips：注解不能用可能是因为编译器版本太低，在项目属性中调整编译器（compiler）版本。
+
+IOC是一个容器，帮我们管理组件。
+	依赖注入：@Autowire自动赋值
+	某个组件要使用spring提供的功能就必须加入到ioc容器中
+	
