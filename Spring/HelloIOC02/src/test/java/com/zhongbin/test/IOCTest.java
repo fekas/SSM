@@ -1,13 +1,9 @@
 package com.zhongbin.test;
 
-import static org.junit.Assert.*;
-
 import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -23,7 +19,6 @@ public class IOCTest {
 		 * 从容器中拿到连接池
 		 */
 		DataSource dataSource = ioc.getBean(DataSource.class);
-		
 		System.out.println(dataSource.getConnection());
 
 	}
