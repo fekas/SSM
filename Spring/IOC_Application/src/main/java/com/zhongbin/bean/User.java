@@ -1,10 +1,10 @@
 package com.zhongbin.bean;
 
 public class User {
+	private String userid;
 	private String username;
 	private String pwd;
 	private Float balance;
-	private String userid;
 	
 	
 	public User() {

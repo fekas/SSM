@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+
+	<!-- 基于注解的AOP配置 -->
+	<!-- 1.将目标类和切面类加入IOC容器 -->
+	<context:component-scan base-package="com.zhongbin"></context:component-scan>
+	<!-- 2.告诉Spring那个是切面类，@Aspect注解 -->
+	<!-- 3.告诉Spring哪个方法何时何地运行 -->
+	<!-- 4.开启基于注解的AOP模式 ：需要AOP名称空间-->
+	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+</beans>

@@ -15,12 +15,7 @@
 		<property name="driverClass" value="${jdbc.driverClass}"></property>
 	</bean>
 
-	<bean id="book" class="com.zhongbin.bean.Book">
-		<property name="author" value="xiaoming"></property>
-		<property name="bookid" value="#{T(java.util.UUID).randomUUID().toString().substring(0,7)}"></property>
-		<property name="bookname" value="chaojiwudi"></property>
-		<property name="count" value="#{12*11}"></property>
-		<property name="price" value="#{13.5*3}"></property>
-	</bean>
+	<bean id="book" class="com.zhongbin.bean.Book"></bean>
+	<bean id = "user" class="com.zhongbin.bean.User"></bean>
 	
 </beans>

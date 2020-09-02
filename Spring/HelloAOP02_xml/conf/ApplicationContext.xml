@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+
+	<!-- 基于配置的AOP -->
+	<bean id="myMathCalcultor" class="com.zhongbin.impl.MyMathCalcultor"></bean>
+	<bean id="AOPLogUtils" class="com.zhongbin.utils.AOPLogUtils"></bean>
+	<!-- 需要AOP名称空间 -->
+	<aop:config>
+		<!-- 配置全局切入点表达式
+		<aop:pointcut expression="" id=""/> -->
+		<!-- 指定切面类，相当于在切面类添加@Aspect注解 -->
+		<aop:aspect ref="AOPLogUtils" order="3">	<!-- order配置切面顺序 -->
+			<!-- 配置切入点表达式（可选） -->
+			<aop:pointcut expression="execution(* com.zhongbin.impl.*.*(*, *))" id="myPointcut"/>
+			<!-- 配置通知方法何时的运行 -->
+			<aop:before method="logStart" pointcut-ref="myPointcut"/>
+			<aop:after-returning method="logReturn" pointcut-ref="myPointcut" returning="result"/>
+			<aop:after-throwing method="logException" pointcut-ref="myPointcut" throwing="e"/>
+			<aop:after method="logEnd" pointcut-ref="myPointcut"/>
+			<aop:around method="myAround" pointcut-ref="myPointcut"/>
+		</aop:aspect>
+	</aop:config>
+	
+	<!-- 注解快，配置完善 -->
+</beans>
