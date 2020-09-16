@@ -1,0 +1,5 @@
+SpringMVC
+	Spring 为展现层提供的基于 MVC 设计理念的优秀的 Web 框架，是目前最主流的 MVC 框架之一
+	支持rest风格的URL请求
+POJO:Plain Ordinary Java Object	简单的Java对象，实际就是普通JavaBeans
+

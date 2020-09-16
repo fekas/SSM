@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+	 
+	<!-- 基于xml配置的声明式事务 -->
+	<!-- 1.将事务管理器加入容器  -->
+	<bean id = "dataSourceTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<!-- 控制数据源 -->
+		<constructor-arg name="dataSource" ref="dataSource"></constructor-arg>
+	</bean>
+	<!-- 2.配置事务方法 (依赖tx名称空间可aop名称空间)-->
+	<aop:config>
+		<aop:pointcut expression="execution(* com.zhongbin.ser*.*.*(..))" id="txPoint"/>
+		<!-- 事务建议
+		 advice-ref=""指向事务管理器的配置-->
+		<aop:advisor advice-ref="myAdvice" pointcut-ref="txPoint"/>
+	</aop:config>
+	<!-- 配置事务管理器 
+		transaction-manager：指定配置哪个事务管理器
+	-->
+	<tx:advice id="myAdvice" transaction-manager="dataSourceTransactionManager">
+		<!-- 事务属性 -->
+		<tx:attributes>
+			<!-- 指明事务方法 ,切入点表达式只是表明要切入那些方法，在这里表示哪些方法需要加事务-->
+			<tx:method name="*"/>
+			<tx:method name="checkout" isolation="DEFAULT"/>
+		</tx:attributes>
+	</tx:advice>
+	
+	
+	
+	
+	<context:component-scan base-package="com.zhongbin"></context:component-scan>
+	<context:property-placeholder location="classpath:dbconfig.properties" />
+
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="user" value="${jdbc.username}"></property>
+		<property name="password" value="${jdbc.password}"></property>
+		<property name="jdbcUrl" value="${jdbc.jdbcUrl}"></property>
+		<property name="driverClass" value="${jdbc.driverClass}"></property>
+	</bean>
+	
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<constructor-arg name="dataSource" ref="dataSource"></constructor-arg>
+	</bean>
+</beans>

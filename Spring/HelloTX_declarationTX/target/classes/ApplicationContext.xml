@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+
+
+	<!-- 
+	编程师事物：(AOP预期思想很像)
+		TransactionFilter{
+			try{
+				//获取连接
+				//设置非自动提交
+				chain.doFilt();
+				//提交
+			}catch{
+				//回滚
+			}finally{
+				//关闭连接，释放资源
+			}
+	
+	声明式事务：只需要告诉Spring那个方法是事务方法，Spring就可以完成相应的工作(用AOP实现)
+	 -->
+	 
+	<!-- 快速为某个方法添加事务：-->
+		<!-- 1.配置出这个事务管理器让它工作  -->
+	<bean id = "dataSourceTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<!-- 控制数据源 -->
+		<constructor-arg name="dataSource" ref="dataSource"></constructor-arg>
+	</bean>
+		<!-- 2.开启基于注解的事务控制模式  （依赖TX名称空间）-->
+	<tx:annotation-driven transaction-manager="dataSourceTransactionManager"/>
+		<!-- 3.给事务方法加@Transaction注解-->
+	
+	
+	<context:component-scan base-package="com.zhongbin"></context:component-scan>
+	<context:property-placeholder location="classpath:dbconfig.properties" />
+
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="user" value="${jdbc.username}"></property>
+		<property name="password" value="${jdbc.password}"></property>
+		<property name="jdbcUrl" value="${jdbc.jdbcUrl}"></property>
+		<property name="driverClass" value="${jdbc.driverClass}"></property>
+	</bean>
+	
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<constructor-arg name="dataSource" ref="dataSource"></constructor-arg>
+	</bean>
+</beans>
