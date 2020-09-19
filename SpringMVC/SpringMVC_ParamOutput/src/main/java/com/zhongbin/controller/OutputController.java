@@ -32,7 +32,7 @@ import org.springframework.web.servlet.ModelAndView;
  * 							BindingAwareModelMap
  * 	>利用方法的返回值:ModelAndView类型返回值 	数据放在请求域中
  *	>临时给session域中保存数据
- *		1）、@SessionAttributes	只能标在类上	可能会出现异常
+ *		1）、@SessionAttributes	只能标在类上	可能会出现异常，详见：HandlerMethodInvoker中的resolveModelAttribute方法
  *			String[] value() default {};
  *			Class<?>[] types() default {};
  *		2）、推荐用原生API

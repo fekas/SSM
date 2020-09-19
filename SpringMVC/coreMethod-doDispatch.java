@@ -63,7 +63,7 @@
 			catch (Exception ex) {
 				dispatchException = ex;
 			}
-			//6.根据方法最终执行完成后封装的ModelAndView转发到页面
+			//6.根据方法最终执行完成后封装的ModelAndView转发或者重定向到页面(试图渲染)
 			processDispatchResult(processedRequest, response, mappedHandler, mv, dispatchException);
 		}
 		catch (Exception ex) {
@@ -521,7 +521,8 @@
 		else if (this.methodResolver.isSessionAttribute(name, paramType)) {
 			//@SessionAttribute标注，从sessionAttribute中拿
 			bindObject = this.sessionAttributeStore.retrieveAttribute(webRequest, name);
-			if (bindObject == null) {
+			if (bindObject == null) {		//在这里可能会抛出异常，
+												//目标对象被@SessionAttribute标注却在Session中找不到时会报错。所以不建议使用
 				raiseSessionRequiredException("Session attribute '" + name + "' required - not found in session");
 			}
 		}

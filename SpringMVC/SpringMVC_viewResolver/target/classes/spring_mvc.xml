@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+	<context:component-scan base-package="com.zhongbin"></context:component-scan>
+	
+	<!-- order=Integer.MAX -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/pages/"></property>
+		<property name="suffix" value=".jsp"></property>
+		<!-- 配置JstlView(JstlView是InternalResourceView的子类) -->
+		<!-- <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"></property> -->
+	</bean>
+	
+	<!-- 也可以导入JSTL包:fmt:message
+		导入了Jstl(taglibs-standard-spec和taglibs-standard-impl)的时候会把view自动创建为JstlView，可以快速支持快速国际化
+	 -->
+	 <!-- JstlView快速支持国际化 -->
+	 <!-- 1.让SpringMVC管理国际化资源文件：配置一个资源管理器：
+	 		id必须是messageSource 因为Springioc核心方法refresh中的初始化国际化功能中以messageSource取值
+	 		详见org.springframework.context.support.AbstractApplicationContext中initMessageSource方法-->
+	 <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+	 	<!-- 指定国际化文件的基础名 -->
+	 	<property name="basename" value="i18n"></property>
+	 </bean>
+	 
+	 <!-- 经常会遇到这种情况：发送一个请求，直接来到另一个页面 -->
+	 <!-- path=""指定请求
+	 		view-name=""指定要映射给哪个视图
+	 		副作用：其他请求不行了?开启MVC注解驱动模式
+	 	 -->
+	 <mvc:view-controller path="handle07" view-name="login"/>
+	 
+	 <!-- 开启MVC注解驱动模式 -->
+	 <mvc:annotation-driven></mvc:annotation-driven>
+	 
+	 <!-- 编写自定义视图解析器和自定义视图 -->
+	 <!-- 1.编写自定义视图解析器和视图的实现类 -->
+	 <!-- 2.视图解析器必须放在IOC容器中 -->
+	 <!-- 	tip:由于某些视图解析器创建视图不会返回null(eg:InternalResourceView)所以要在这些视图前使用自定义视图解析器 ，
+	 			自定义视图解析器就应该实现order接口，以调整优先级
+	 -->
+	 <bean class="com.zhongbin.ViewResolver.MyPictureViewResolver">
+		 <!-- 数字越小，优先级越高 -->
+	 	<property name="order" value="1"></property>
+	 </bean>
+</beans>

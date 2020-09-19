@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class HelloController {
 
-	@RequestMapping("hello")
+	@RequestMapping("/hello")
 	private String handle01() {
 		System.out.println("handle01处理hello请求");
 		return "success";
@@ -23,7 +23,7 @@ public class HelloController {
 	 * 默认方式获取参数：
 	 * 	直接在方法参数列表上添加与请求参数名相同的变量，用这个变量来接受参数的值，没有则为null
 	 */
-	@RequestMapping("hello01")
+	@RequestMapping("/hello01")
 	private String handle01(String username) {
 		System.out.println("username的值是："+username);
 		return "success";
@@ -38,7 +38,7 @@ public class HelloController {
 	 * 
 	 * 与@PathVariable的区别：PathVariable获取路径上的值
 	 */
-	@RequestMapping("hello02")
+	@RequestMapping("/hello02")
 	private String handle02(@RequestParam(value="username", defaultValue="你没带",required=false)String user) {
 		System.out.println("user的值是："+user);
 		return "success";
@@ -51,7 +51,7 @@ public class HelloController {
 	 * String defaultValue() default ValueConstants.DEFAULT_NONE;
 	 * 		取代request.getHeader("User-Agent");
 	 */
-	@RequestMapping("hello03")
+	@RequestMapping("/hello03")
 	private String handle03(@RequestHeader("User-Agent")String userAgent) {
 		System.out.println("User-Agent是："+userAgent);
 		return "success";
@@ -63,7 +63,7 @@ public class HelloController {
 	 * String defaultValue() default ValueConstants.DEFAULT_NONE;
 	 * 	取代Cookie[] cookies = request.getCookies();
 	 */
-	@RequestMapping("hello04")
+	@RequestMapping("/hello04")
 	private String handle04(@CookieValue("JSESSIONID")String jId) {
 		System.out.println("Cookies中的jId："+jId);
 		return "success";
@@ -75,7 +75,7 @@ public class HelloController {
 	 * Locale(国际化有关的区域对象)	InputStream(request.getInputStream();)	OutputStream(response.getOutputStream();)
 	 * Reader (request.getReader();)	Writer(response.getWriter();)
 	 */
-	@RequestMapping("hello05")
+	@RequestMapping("/hello05")
 	private String handle05(HttpSession session,HttpServletRequest request){
 		request.setAttribute("reqParam", "request域中的参数");
 		session.setAttribute("sessionParam", "session域中的参数");
